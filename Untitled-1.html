@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Car Data - Dashboard</title>
+    <style>
+        :root {
+            --tesla-red: #cc0000;
+            --bg-color: #111;
+            --text-color: #eee;
+            --card-bg: #222;
+            --border-color: #444;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 { color: var(--tesla-red); margin-bottom: 10px; }
+        h2 { border-bottom: 2px solid var(--border-color); padding-bottom: 10px; margin-top: 30px; width: 100%; max-width: 800px;}
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Секція конфігурації */
+        .config-panel {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #aaa;
+        }
+
+        input[type="text"], input[type="password"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #333;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            color: #fff;
+            box-sizing: border-box; /* Важливо для падінгів */
+        }
+
+        /* Секція статусу */
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .status-card {
+            background-color: var(--card-bg);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .status-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--tesla-red);
+            margin: 10px 0;
+        }
+
+        .status-label {
+            color: #aaa;
+            font-size: 0.9em;
+        }
+
+        /* Прогрес бар для SOH */
+        .soh-container {
+            width: 100%;
+            background-color: #333;
+            border-radius: 10px;
+            height: 20px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .soh-bar {
+            height: 100%;
+            background-color: #4caf50; /* Зелений за замовчуванням */
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        /* Грід кнопок */
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        button {
+            padding: 15px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1em;
+            transition: background-color 0.2s, transform 0.1s;
+            color: white;
+        }
+
+        button:active { transform: scale(0.98); }
+
+        /* Стандартні сірі кнопки */
+        .btn-cmd { background-color: #444; }
+        .btn-cmd:hover { background-color: #555; }
+
+        /* Червоні кнопки для важливих дій */
+        .btn-danger { background-color: var(--tesla-red); }
+        .btn-danger:hover { background-color: #ff3333; }
+
+        /* Кнопки живлення (Клімат) */
+        .btn-on { background-color: #2e7d32; } /* Зелена */
+        .btn-off { background-color: #c62828; } /* Червона */
+
+        #log-area {
+            width: 100%;
+            max-width: 800px;
+            height: 150px;
+            background-color: #000;
+            color: #0f0;
+            font-family: monospace;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-y: scroll;
+            margin-top: 20px;
+            border: 1px solid var(--border-color);
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>My Tesla Dashboard</h1>
+    <div class="status-label" id="car-vin-display">Завантажте дані...</div>
+
+    <div class="container">
+        
+        <details class="config-panel">
+            <summary style="cursor: pointer; color: #aaa;">🔧 Налаштування підключення</summary>
+            <div style="margin-top: 15px;">
+                <div class="input-group">
+                    <label>Access Token (з терміналу):</label>
+                    <input type="password" id="token" placeholder="eyJhbGciOiJSUzI1NiIs...">
+                </div>
+                <div class="input-group">
+                    <label>Vehicle ID (числовий):</label>
+                    <input type="text" id="vehicle_id" placeholder="1234567890">
+                </div>
+                <div class="input-group">
+                    <label>Паспортний запас ходу нової (EPA км):</label>
+                    <input type="number" id="epa_range" value="420" placeholder="напр. 420">
+                    <div class="status-label" style="margin-top: 5px;">Потрібно для розрахунку SOH батареї.</div>
+                </div>
+                <button class="btn-danger" style="width: 100%;" onclick="fetchAllData()">Оновити дані авто</button>
+            </div>
+        </details>
+
+        <div class="status-grid">
+            <div class="status-card">
+                <div class="status-label">Заряд</div>
+                <div class="status-value" id="batt-level">--%</div>
+            </div>
+            <div class="status-card">
+                <div class="status-label">Запас ходу</div>
+                <div class="status-value" id="batt-range">-- км</div>
+            </div>
+            <div class="status-card" style="grid-column: span 1;">
+                <div class="status-label">Здоров'я батареї (SOH)</div>
+                <div class="status-value" id="soh-value">--%</div>
+                <div class="soh-container">
+                    <div class="soh-bar" id="soh-bar"></div>
+                </div>
+            </div>
+        </div>
+
+        <h2>Управління</h2>
+        <div class="button-grid">
+            <button class="btn-danger" onclick="sendCommand('wake_up')">☀️ Розбудити</button>
+            <button class="btn-cmd" onclick="sendCommand('honk_horn')">📢 Посигналити</button>
+            <button class="btn-cmd" onclick="sendCommand('flash_lights')">💡 Блимнути</button>
+            <button class="btn-cmd" onclick="sendCommand('door_lock')">🔒 Закрити</button>
+            <button class="btn-cmd" onclick="sendCommand('door_unlock')">🔓 Відкрити</button>
+        </div>
+
+        <h2>Клімат та Зарядка</h2>
+        <div class="button-grid">
+            <button class="btn-on" onclick="sendCommand('auto_conditioning_start')">❄️ Клімат ON</button>
+            <button class="btn-off" onclick="sendCommand('auto_conditioning_stop')">⚪ Клімат OFF</button>
+            <button class="btn-cmd" onclick="setChargeLimit()">🔋 Ліміт 80%</button>
+        </div>
+
+        <div id="log-area">> Готовий до роботи...<br></div>
+
+    </div>
+
+    <script>
+        // Коректний URL для Північної Америки
+        const BASE_URL = "https://fleet-api.prd.na.vn.cloud.tesla.com";
+
+        // Функція для логування в вікно на сторінці
+        function log(message, type = 'info') {
+            const logArea = document.getElementById('log-area');
+            const time = new Date().toLocaleTimeString();
+            let color = '#0f0'; // зелений
+            if (type === 'error') color = '#f00'; // червоний
+            if (type === 'warn') color = '#ff0'; // жовтий
+
+            logArea.innerHTML += `<span style="color: ${color}">[${time}] ${message}</span><br>`;
+            logArea.scrollTop = logArea.scrollHeight;
+        }
+
+        // Отримання заголовків з токеном
+        function getHeaders() {
+            const token = document.getElementById('token').value;
+            if (!token) {
+                log("ПОМИЛКА: Не вказано Access Token!", "error");
+                alert("Будь ласка, вставте ваш Access Token у налаштуваннях.");
+                return null;
+            }
+            return {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            };
+        }
+
+        // Отримання Vehicle ID
+        function getVehicleId() {
+            const id = document.getElementById('vehicle_id').value;
+            if (!id) {
+                log("ПОМИЛКА: Не вказано Vehicle ID!", "error");
+                alert("Будь ласка, вставте ваш числовий Vehicle ID.");
+                return null;
+            }
+            return id;
+        }
+
+        // --- РОЗРАХУНОК SOH ---
+        function updateSohDisplay(battLevel, battRange) {
+            const epaNew = parseFloat(document.getElementById('epa_range').value);
+            const bar = document.getElementById('soh-bar');
+            const valueDisplay = document.getElementById('soh-value');
+
+            if (!epaNew || battLevel < 5) return; // Не рахуємо при пустому акумуляторі
+
+            // 1. Теоретичний пробіг при 100%
+            const fullRangeNow = battRange / (battLevel / 100);
+            
+            // 2. Відношення до нової (SOH)
+            let soh = (fullRangeNow / epaNew) * 100;
+            if (soh > 100) soh = 100; // Проти багів API
+
+            // Оновлення UI
+            valueDisplay.innerText = soh.toFixed(1) + "%";
+            bar.style.width = soh + "%";
+
+            // Колір бару в залежності від зносу
+            if (soh > 90) bar.style.backgroundColor = "#4caf50"; // Зелений
+            else if (soh > 80) bar.style.backgroundColor = "#ff9800"; // Помаранчевий
+            else bar.style.backgroundColor = "#f44336"; // Червоний
+
+            log(`Розраховано SOH: ${soh.toFixed(2)}% (База EPA: ${epaNew} км)`);
+        }
+
+        // --- ЗАПИТ ДАНИХ (Vehicle Data) ---
+        async function fetchAllData() {
+            const headers = getHeaders();
+            const vid = getVehicleId();
+            if (!headers || !vid) return;
+
+            log(`Запитую дані для авто ${vid}...`);
+
+            try {
+                // Використовуємо проксі для обходу CORS, якщо виникають помилки.
+                // Tesla API часто блокує прямі запити з браузерів.
+                // Для тестів використовуємо прямий запит.
+                const response = await fetch(`${BASE_URL}/api/1/vehicles/${vid}/vehicle_data`, {
+                    method: 'GET',
+                    headers: headers
+                });
+
+                if (!response.ok) throw new Error(`Помилка API: ${response.status}`);
+
+                const data = await response.json();
+                const v = data.response;
+
+                log("Дані успішно отримано.", "info");
+
+                // Оновлення інтерфейсу
+                document.getElementById('car-vin-display').innerText = `${v.display_name} | VIN: ${v.vin}`;
+                document.getElementById('batt-level').innerText = `${v.charge_state.battery_level}%`;
+                
+                // Конвертуємо милі в км, якщо API віддає в милях
+                let rangeKm = v.charge_state.battery_range * 1.60934;
+                document.getElementById('batt-range').innerText = `${rangeKm.toFixed(0)} км`;
+
+                // Рахуємо SOH
+                updateSohDisplay(v.charge_state.battery_level, rangeKm);
+
+            } catch (error) {
+                log(`Помилка завантаження: ${error.message}`, "error");
+                console.error(error);
+                
+                // Навігація при CORS помилці
+                if (error.message.includes('Failed to fetch')) {
+                    log("Ймовірно, помилка CORS. Браузер блокує запит до Tesla API.", "warn");
+                    log("fleet-api вимагає серверного підключення. Цей статичний сайт може працювати тільки якщо у вас встановлено розширення для обходу CORS у браузері (напр. 'Allow CORS').", "warn");
+                }
+            }
+        }
+
+        // --- ВІДПРАВКА КОМАНД (POST) ---
+        async function sendCommand(commandName, commandData = {}) {
+            const headers = getHeaders();
+            const vid = getVehicleId();
+            if (!headers || !vid) return;
+
+            log(`Відправляю команду [${commandName}]...`);
+
+            try {
+                const response = await fetch(`${BASE_URL}/api/1/vehicles/${vid}/command/${commandName}`, {
+                    method: 'POST',
+                    headers: headers,
+                    body: JSON.stringify(commandData)
+                });
+
+                const data = await response.json();
+
+                if (data.response && data.response.result === true) {
+                    log(`Успіх: Команда [${commandName}] виконана автомобілем.`, "info");
+                } else if (data.response && data.response.reason === "asleep") {
+                    log(`Помилка: Автомобіль спить. Натисніть 'Розбудити' і зачекайте.`, "warn");
+                } else {
+                    log(`Помилка: ${data.response ? data.response.reason : 'Невідома причина'}`, "error");
+                }
+
+            } catch (error) {
+                log(`Помилка мережі: ${error.message}`, "error");
+            }
+        }
+
+        // Окрема функція для встановлення ліміту (приклад команди з даними)
+        function setChargeLimit() {
+            log("Встановлюю ліміт зарядки 80%...");
+            sendCommand('set_charge_limit', { "percent": 80 });
+        }
+
+        // Додайте сюди ваші власні скріпти нижче vvv
+        // ПРИКЛАД:
+        // function myCustomHonk() {
+        //    log("Мій кастомний гудок!");
+        //    sendCommand('honk_horn');
+        // }
+
+    </script>
+</body>
+</html>
