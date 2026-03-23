@@ -295,6 +295,45 @@
 
             log(`Розраховано SOH: ${soh.toFixed(2)}% (База EPA: ${epaNew} км)`);
         }
+        // ФУНКЦІЯ GHOST MODE (МАКСИМАЛЬНА СКРИТНІСТЬ)
+async function activateGhostMode() {
+    log("🚀 Запуск протоколу GHOST...", "warn");
+
+    // 1. Вимикаємо Sentry Mode (найяскравіший індикатор - червоне око на екрані та спалахи фар)
+    await sendCommand('set_sentry_mode', { "on": false });
+    log(" - Сентинель: ВИМКНЕНО");
+
+    // 2. Вимикаємо клімат-контроль (прибираємо шум вентиляторів)
+    await sendCommand('auto_conditioning_stop');
+    log(" - Клімат: ЗУПИНЕНО (повна тиша)");
+
+    // 3. Закриваємо порт зарядки (якщо він світився)
+    await sendCommand('charge_port_door_close');
+    log(" - Порт зарядки: ЗАКРИТО");
+
+    // 4. Замикаємо двері (щоб згасло внутрішнє світло)
+    await sendCommand('door_lock');
+    log(" - Центральний замок: ЗАБЛОКОВАНО");
+
+    log("✅ Режим GHOST активний. Машина максимально замаскована.", "info");
+}
+
+// ФУНКЦІЯ ПОВЕРНЕННЯ ДО ЖИТТЯ
+async function deactivateGhostMode() {
+    log("☀️ Повернення до нормального режиму...", "info");
+
+    // 1. Вмикаємо Sentry для безпеки
+    await sendCommand('set_sentry_mode', { "on": true });
+    
+    // 2. Вмикаємо клімат на комфортні 21°C
+    await sendCommand('auto_conditioning_start');
+    await sendCommand('set_temps', { "driver_temp": 21, "passenger_temp": 21 });
+    
+    // 3. Блимаємо фарами, щоб знайти авто
+    await sendCommand('flash_lights');
+
+    log("✅ Система відновлена. Клімат: 21°C, Охорона: ON.");
+}
 
         // --- ЗАПИТ ДАНИХ (Vehicle Data) ---
         async function fetchAllData() {
