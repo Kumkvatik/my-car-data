@@ -205,11 +205,16 @@
 
         <h2>Управління</h2>
         <div class="button-grid">
+    <button class="btn-off" style="background-color: #000; border: 1px solid #444;" onclick="activateGhostMode()">🌑 Активація GHOST</button>
+    <button class="btn-on" style="background-color: #1a1a1a; border: 1px solid #00ff00;" onclick="deactivateGhostMode()">🌕 Вихід з тіні</button>
+</div>
+        <div class="button-grid">
             <button class="btn-danger" onclick="sendCommand('wake_up')">☀️ Розбудити</button>
             <button class="btn-cmd" onclick="sendCommand('honk_horn')">📢 Посигналити</button>
             <button class="btn-cmd" onclick="sendCommand('flash_lights')">💡 Блимнути</button>
             <button class="btn-cmd" onclick="sendCommand('door_lock')">🔒 Закрити</button>
             <button class="btn-cmd" onclick="sendCommand('door_unlock')">🔓 Відкрити</button>
+       
         </div>
 
         <h2>Клімат та Зарядка</h2>
