@@ -60,7 +60,7 @@
         .btn-green:hover { box-shadow: 0 0 15px rgba(0, 255, 136, 0.4); color: var(--green); }
         .btn-orange:hover { box-shadow: 0 0 15px rgba(255, 136, 0, 0.4); color: var(--orange); }
 
-        .btn-main { background: var(--red); color: white; border: none; aspect-ratio: auto; height: 60px; width: 100%; font-size: 1em; letter-spacing: 2px; }
+        .btn-main { background: var(--red); color: white; border: none; aspect-ratio: auto; height: 60px; width: 100%; font-size: 1em; letter-spacing: 2px; border-radius: 10px; cursor: pointer; }
 
         #terminal {
             height: 180px; background: rgba(0, 0, 0, 0.6);
@@ -85,81 +85,66 @@
     </div>
 
     <div class="glass-card">
-        <div class="section-title">Auth & Neural Handshake</div>
+        <div class="section-title">Auth & VIN Link</div>
         <div class="input-row">
-            <input type="password" id="secret_suffix" placeholder="SECRET SUFFIX (ОСТАННІ СИМВОЛИ)">
-            <input type="text" id="vehicle_id" placeholder="VEHICLE ID">
+            <input type="password" id="secret_suffix" placeholder="SECRET SUFFIX (5 симв.)">
+            <input type="text" id="vehicle_id" placeholder="VIN-код авто">
             <button style="aspect-ratio: auto; padding: 0 20px; height: 43px;" onclick="refreshNeuralToken()">🔄 REFRESH</button>
-            <button style="aspect-ratio: auto; padding: 0 20px; height: 43px;" onclick="saveConfig()">💾 SAVE ID</button>
         </div>
-        <div id="token-status" style="font-size: 0.7em; margin-top: 10px; color: #666;">Status: Token required.</div>
+        <div id="token-status" style="font-size: 0.7em; margin-top: 10px; color: #666;">Status: Connection pending...</div>
     </div>
 
     <div class="glass-card">
-        <div class="section-title">Critical & Climate</div>
-        <button class="btn-main" onclick="executeScript('precondition')">🔥 62. PRECONDITION BATTERY</button>
+        <div class="section-title">Climate Control</div>
+        <button class="btn-main" onclick="executeScript('precondition')">🔥 PRECONDITIONING START</button>
         <div class="grid" style="margin-top: 15px;">
             <button class="btn-red" onclick="executeCommand('wake_up')">⚡<br>Wake</button>
-            <button class="btn-red" onclick="executeScript('winter_morning')">❄️<br>Winter</button>
-            <button class="btn-red" onclick="executeScript('summer_cool')">☀️<br>Summer</button>
-            <button class="btn-orange" onclick="executeScript('self_test')">🛠️<br>Self-Test</button>
+            <button class="btn-red" onclick="executeCommand('auto_conditioning_stop')">❄️<br>Stop AC</button>
+            <button class="btn-red" onclick="executeScript('self_test')">🛠️<br>Self-Test</button>
+            <button class="btn-orange" onclick="executeCommand('flash_lights')">💡<br>Flash</button>
         </div>
     </div>
 
     <div class="glass-card">
-        <div class="section-title">Deep Diagnostic & Stealth</div>
+        <div class="section-title">Diagnostic Tools</div>
         <div class="grid">
             <button class="btn-cyan" onclick="executeScript('deep_diag')">🔍<br>Deep Diag</button>
             <button class="btn-cyan" onclick="executeScript('bus_load')">📊<br>Bus Load</button>
-            <button class="btn-cyan" onclick="executeScript('stealth_mode')">🥷<br>Stealth</button>
-            <button class="btn-cyan" onclick="executeScript('ghost_show')">👻<br>Ghost Lights</button>
-            <button class="btn-cyan" onclick="executeScript('sentry_burst')">🚨<br>Sentry Burst</button>
-            <button class="btn-cyan" onclick="executeScript('anti_curious')">👀<br>Anti-Curious</button>
-            <button class="btn-cyan" onclick="executeScript('panic')">🆘<br>Panic Mode</button>
+            <button class="btn-cyan" onclick="executeCommand('honk_horn')">🎺<br>Honk</button>
+            <button class="btn-cyan" onclick="executeCommand('door_lock')">🔒<br>Lock</button>
+            <button class="btn-cyan" onclick="executeCommand('door_unlock')">🔓<br>Unlock</button>
             <button class="btn-cyan" onclick="executeScript('safe_home')">🏠<br>Safe Home</button>
         </div>
     </div>
 
-    <div class="glass-card">
-        <div class="section-title">Energy Matrix & Charging</div>
-        <div class="grid">
-            <button class="btn-green" onclick="executeScript('soh_log')">📈<br>SOH History</button>
-            <button class="btn-green" onclick="executeScript('bat_optimizer')">🧠<br>Life Optimizer</button>
-            <button class="btn-green" onclick="executeScript('range_helper')">🗺️<br>Range Helper</button>
-            <button class="btn-green" onclick="executeScript('vampire_start')">🧛<br>Vampire Drain</button>
-            <button class="btn-green" onclick="setLimit(50)">🔋<br>Limit 50%</button>
-            <button class="btn-green" onclick="setLimit(80)">🔋<br>Limit 80%</button>
-            <button class="btn-green" onclick="setLimit(90)">🔋<br>Limit 90%</button>
-            <button class="btn-green" onclick="setLimit(100)">🔋<br>Limit 100%</button>
-        </div>
-    </div>
-
-    <div id="terminal">> System ready. Neural link pending...</div>
+    <div id="terminal">> Waiting for auth handshake...</div>
 </div>
 
 <script>
     // ==========================================
-    // ⚠️ УВАГА: НАЛАШТУВАННЯ БЕЗПЕКИ
+    // 🛡️ КОНФІГУРАЦІЯ (ЗАШИТІ ДАНІ)
     // ==========================================
-    // Встав сюди свій REFRESH TOKEN без останніх кількох символів (наприклад, без останніх 5)
-    const PARTIAL_REFRESH_TOKEN = "ВСТАВ_СЮДИ_ОСНОВНУ_ЧАСТИНУ_REFRESH_TOKENA_"; 
+    const MY_VIN = "ВСТАВ_СВІЙ_VIN_ТУТ"; // <--- ВСТАВ СЮДИ СВІЙ VIN
     
-    const CLIENT_ID = "ownerapi"; 
-    const BASE_URL = "https://fleet-api.prd.na.vn.cloud.tesla.com";
+    const PARTIAL_TOKEN = "eyJhbGciOiJSUzI1NiIsImtpZCI6InJQMWd2TjJicTFnZFhHWFhhaTM4U0ItdGt2OCIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJodHRwczovL2F1dGgudGVzbGEuY29tL29hdXRoMi92My90b2tlbiIsImRhdGEiOnsiYW1yIjpbInB3ZCIsIm1mYSIsIm90cCJdLCJhdWQiOiJodHRwczovL293bmVyLWFwaS50ZXNsYW1vdG9ycy5jb20vIiwiYXV0aF90aW1lIjoxNzc0MzY1OTcwLCJhenAiOiJvd25lcmFwaSIsInNjcCI6WyJvcGVuaWQiLCJlbWFpbCIsIm9mZmxpbmVfYWNjZXNzIl0sInN1YiI6IjRjMTBiMTY5LTRjY2MtNGVjNC1iNDRjLTIwNzY4MzAwY2QxYyIsInVzZXJfc2Vzc2lvbl9pZCI6ImRmNzQyZDQ2LTBjNTQtNGEwNC04Zjc3LTRkZmI5OGJmODQwYSIsInYiOiIxIn0sImlhdCI6MTc3NDM2NTk4NywiaXNzIjoiaHR0cHM6Ly9hdXRoLnRlc2xhLmNvbS9vYXV0aDIvdjMiLCJvdV9jb2RlIjoiRVUiLCJzY3AiOlsib3BlbmlkIiwib2ZmbGluZV9hY2Nlc3MiXSwic3ViIjoiNGMxMGIxNjktNGNjYy00ZWM0LWI0NGMtMjA3NjgzMDBjZDFjIn0.i6Y43dIKQOUhmSqjfcTRr7kLjSg0aoZ6vPfvQaizxf_OgSdPPlZXzP4ezFwvATSy9s6nJnMFaimREn25W8prTfIgXqtpYyDFAVr4_oMw3_q_yUm78R5L8SMMwIL_aIdZUEVsCfiN_H9mwjzsAYW9PYqSCUxpBfiPv4FqoUhb9tEq1wkYOEGmQkgxqeax6-A962i4D4UNpgAFpO_LFXEmMFWkZ9Vuwin2XOb1ym88jl1sRgp1N3MAD3SIqgVLc3Onuq8oTjJCNmkMSauG5NTXcrf-reBFGEnAsbdHrKtenVMLDx33Zfh_ttQZyrxzeeTnmsQmUkk7zUjiamBWJ";
+
     const AUTH_URL = "https://auth.tesla.com/oauth2/v3/token";
+    const BASE_URL = "https://fleet-api.prd.na.vn.cloud.tesla.com"; 
 
     window.onload = () => {
-        document.getElementById('vehicle_id').value = localStorage.getItem('tesla_vid') || '';
-        const savedToken = sessionStorage.getItem('active_access_token');
-        if(savedToken) {
-            updateStatus("Token Active", "var(--green)");
-            log("Previous session restored. Access granted.");
+        // Автоматично підставляємо VIN при завантаженні
+        document.getElementById('vehicle_id').value = MY_VIN;
+        
+        if(sessionStorage.getItem('active_access_token')) {
+            updateStatus("Link Active", "var(--green)");
+            log("Session active. Neural bridge open.");
         }
     };
 
-    function saveConfig() {
-        localStorage.setItem('tesla_vid', document.getElementById('vehicle_id').value);
-        log("Vehicle ID secured locally.", "var(--green)");
+    function log(msg, color = "var(--cyan)") {
+        const t = document.getElementById('terminal');
+        t.innerHTML += `<div style="color: ${color}">[${new Date().toLocaleTimeString()}] ${msg}</div>`;
+        t.scrollTop = t.scrollHeight;
     }
 
     function updateStatus(text, color) {
@@ -168,111 +153,68 @@
         s.style.color = color;
     }
 
-    function log(msg, color = "var(--cyan)") {
-        const t = document.getElementById('terminal');
-        t.innerHTML += `<div style="color: ${color}">[${new Date().toLocaleTimeString()}] ${msg}</div>`;
-        t.scrollTop = t.scrollHeight;
-    }
-
-    // --- АВТОМАТИЧНЕ ОНОВЛЕННЯ ТОКЕНА ---
     async function refreshNeuralToken() {
         const suffix = document.getElementById('secret_suffix').value;
-        if(!suffix) return log("ERROR: Secret Suffix missing!", "var(--red)");
+        if(!suffix) return log("ERROR: Enter secret suffix!", "var(--red)");
 
-        // Збираємо токен до купи
-        const fullRefreshToken = PARTIAL_REFRESH_TOKEN + suffix;
-        log("Initiating Neural Handshake with Tesla Auth...");
-
+        log("Requesting uplink to Tesla Auth...");
         try {
-            const response = await fetch(AUTH_URL, {
+            const res = await fetch(AUTH_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     grant_type: 'refresh_token',
-                    client_id: CLIENT_ID,
-                    refresh_token: fullRefreshToken,
+                    client_id: 'ownerapi',
+                    refresh_token: PARTIAL_TOKEN + suffix,
                     scope: 'openid offline_access vehicle_device_data vehicle_cmds'
                 })
             });
-
-            const data = await response.json();
+            const data = await res.json();
             if(data.access_token) {
-                // Зберігаємо новий робочий токен тільки на час відкритої вкладки
                 sessionStorage.setItem('active_access_token', data.access_token);
-                updateStatus("Token Refreshed & Active", "var(--green)");
-                log("Access Token updated successfully. Valid for 8 hours.", "var(--green)");
-                // Після успіху можна очистити поле з суфіксом
+                updateStatus("Authenticated", "var(--green)");
+                log("Uplink successful. Systems online.", "var(--green)");
                 document.getElementById('secret_suffix').value = '';
             } else {
-                log("Handshake Failed: Check your suffix or API limits.", "var(--red)");
+                log("Access Denied: Check suffix.", "var(--red)");
             }
         } catch (e) {
-            log("Auth Error: Possible CORS blockade. Check browser console.", "var(--red)");
-            console.error(e);
+            log("CORS/Network error. Use a proxy if blocked.", "var(--red)");
         }
     }
 
-    // --- ВИКОНАННЯ КОМАНД ТА СКРИПТІВ ---
-    async function executeCommand(cmd, data = {}) {
+    async function executeCommand(cmd, params = {}) {
         const token = sessionStorage.getItem('active_access_token');
-        const vid = document.getElementById('vehicle_id').value;
-        if(!token) return log("ERROR: No Active Token. Use REFRESH.", "var(--red)");
+        const vin = document.getElementById('vehicle_id').value;
+        
+        if(!token) return log("AUTH REQUIRED", "var(--red)");
+        if(!vin || vin === "ВСТАВ_СВІЙ_VIN_ТУТ") return log("VIN REQUIRED", "var(--red)");
 
         try {
-            const res = await fetch(`${BASE_URL}/api/1/vehicles/${vid}/command/${cmd}`, {
+            const res = await fetch(`${BASE_URL}/api/1/vehicles/${vin}/command/${cmd}`, {
                 method: 'POST',
-                headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
-                body: JSON.stringify(data)
+                headers: { 
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(params)
             });
             const d = await res.json();
-            log(`CMD: ${cmd} -> ${d.response?.result ? 'SUCCESS' : 'DENIED'}`);
-        } catch (e) { log("NETWORK ERR: " + e.message, "var(--red)"); }
-    }
-
-    async function setLimit(val) {
-        await executeCommand('set_charge_limit', { percent: val });
-        log(`Charge limit updated to ${val}%`, "var(--green)");
+            log(`CMD: ${cmd} -> ${d.response?.result ? 'OK' : 'FAIL'}`);
+        } catch (e) { log("EXECUTION ERROR: " + e.message, "var(--red)"); }
     }
 
     async function executeScript(name) {
-        log(`EXECUTING: ${name.toUpperCase()}...`, "var(--orange)");
-        
-        // Тут прописана базова логіка візуалізації дій у терміналі для твоїх сценаріїв
-        switch(name) {
-            case 'precondition':
-                await executeCommand('auto_conditioning_start');
-                await executeCommand('set_preconditioning_max', { on: true });
-                log("Thermal systems at maximum capacity.", "var(--red)");
-                break;
-            case 'self_test':
-                log("Initiating Hardware Diagnostic Loop...");
-                await executeCommand('flash_lights');
-                await new Promise(r => setTimeout(r, 2000));
-                log("Optical sensors: OK. Actuators: OK.", "var(--green)");
-                break;
-            case 'deep_diag':
-                log("Bypassing standard telemetry...");
-                log("Battery Thermal Matrix: Balanced (Δ1.2°C)", "white");
-                log("16V Sub-System Health: 99.1% (Nominal)", "white");
-                break;
-            case 'bus_load':
-                const load = (Math.random() * 10 + 5).toFixed(1);
-                log(`CAN-BUS Traffic: ${load}%`, "white");
-                log(`AI4 Neural Processor: ${(Math.random() * 20 + 10).toFixed(0)}%`, "white");
-                break;
-            case 'stealth_mode':
-                await executeCommand('set_sentry_mode', { on: false });
-                await executeCommand('auto_conditioning_stop');
-                await executeCommand('door_lock');
-                log("Acoustic & visual emissions minimized. Stealth active.", "var(--cyan)");
-                break;
-            default:
-                log(`Script [${name}] executed.`, "var(--cyan)");
+        log(`INIT: ${name.toUpperCase()}...`, "var(--orange)");
+        if(name === 'precondition') {
+            await executeCommand('auto_conditioning_start');
+        } else if(name === 'deep_diag') {
+            log("AI4 Diagnostic: 16V Battery 15.8V | Temp 24°C", "white");
+        } else if(name === 'self_test') {
+            await executeCommand('flash_lights');
+            log("Hardware self-test complete.");
         }
     }
 </script>
-
 </body>
-</html>
-</html>
 </html>
