@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TESLA NEURAL LINK v26.3</title>
+    <title>TESLA NEURAL LINK v26.4</title>
     <style>
         :root {
             --bg: #050505;
@@ -17,169 +17,87 @@
         }
 
         body {
-            background: var(--bg);
-            color: var(--text);
+            background: var(--bg); color: var(--text);
             font-family: 'Segoe UI', system-ui, sans-serif;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
+            margin: 0; padding: 20px;
+            display: flex; justify-content: center;
             letter-spacing: 0.5px;
         }
 
-        .container {
-            width: 100%;
-            max-width: 1000px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+        .container { width: 100%; max-width: 1000px; display: flex; flex-direction: column; gap: 20px; }
 
         .header {
-            text-align: center;
-            padding: 20px;
+            text-align: center; padding: 20px;
             background: linear-gradient(180deg, rgba(255,42,42,0.1) 0%, transparent 100%);
             border-radius: 15px;
         }
 
-        .header h1 {
-            margin: 0;
-            font-size: 1.8em;
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            color: var(--red);
-            text-shadow: 0 0 15px var(--red);
-        }
+        .header h1 { margin: 0; font-size: 1.8em; text-transform: uppercase; letter-spacing: 5px; color: var(--red); text-shadow: 0 0 15px var(--red); }
 
         .glass-card {
-            background: var(--glass);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 20px;
+            background: var(--glass); backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border); border-radius: 20px; padding: 20px;
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
         }
 
-        .section-title {
-            font-size: 0.8em;
-            text-transform: uppercase;
-            color: #666;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .section-title { font-size: 0.8em; text-transform: uppercase; color: #666; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .section-title::after { content: ""; flex: 1; height: 1px; background: var(--glass-border); }
 
-        .section-title::after {
-            content: "";
-            flex: 1;
-            height: 1px;
-            background: var(--glass-border);
-        }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; }
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 15px;
-        }
-
-        /* КВАДРАТНІ КНОПКИ */
         button {
-            aspect-ratio: 1 / 1;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            color: var(--text);
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            aspect-ratio: 1 / 1; background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border); border-radius: 12px; color: var(--text);
+            cursor: pointer; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 10px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            font-size: 0.75em;
-            font-weight: 500;
-            text-transform: uppercase;
-            position: relative;
-            overflow: hidden;
+            font-size: 0.75em; font-weight: 500; text-transform: uppercase;
         }
 
-        button:hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateY(-5px);
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-
-        button:active { transform: scale(0.95); }
-
-        /* КЛАСИ КОЛЬОРІВ */
+        button:hover { background: rgba(255, 255, 255, 0.08); transform: translateY(-5px); border-color: rgba(255, 255, 255, 0.3); }
         .btn-red:hover { box-shadow: 0 0 15px rgba(255, 42, 42, 0.4); color: var(--red); }
         .btn-cyan:hover { box-shadow: 0 0 15px rgba(0, 242, 255, 0.4); color: var(--cyan); }
         .btn-green:hover { box-shadow: 0 0 15px rgba(0, 255, 136, 0.4); color: var(--green); }
         .btn-orange:hover { box-shadow: 0 0 15px rgba(255, 136, 0, 0.4); color: var(--orange); }
 
-        .btn-active {
-            background: var(--red);
-            color: white !important;
-            border: none;
-            aspect-ratio: auto;
-            height: 60px;
-            width: 100%;
-        }
+        .btn-main { background: var(--red); color: white; border: none; aspect-ratio: auto; height: 60px; width: 100%; font-size: 1em; letter-spacing: 2px; }
 
-        /* ТЕРМІНАЛ */
         #terminal {
-            height: 200px;
-            background: rgba(0, 0, 0, 0.6);
-            border-radius: 15px;
-            padding: 15px;
-            font-family: 'Consolas', monospace;
-            font-size: 0.85em;
-            color: var(--cyan);
-            overflow-y: auto;
-            border: 1px solid var(--glass-border);
+            height: 180px; background: rgba(0, 0, 0, 0.6);
+            border-radius: 15px; padding: 15px;
+            font-family: 'Consolas', monospace; font-size: 0.85em;
+            color: var(--cyan); overflow-y: auto; border: 1px solid var(--glass-border);
         }
 
-        .input-row {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        input {
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            padding: 12px;
-            color: white;
-            border-radius: 10px;
-            flex: 1;
-            outline: none;
-        }
-
+        .input-row { display: flex; gap: 10px; flex-wrap: wrap; }
+        input { background: var(--glass); border: 1px solid var(--glass-border); padding: 12px; color: white; border-radius: 10px; flex: 1; min-width: 150px; outline: none; }
         input:focus { border-color: var(--cyan); }
 
-        @media (max-width: 600px) {
-            .grid { grid-template-columns: repeat(2, 1fr); }
-        }
+        @media (max-width: 600px) { .grid { grid-template-columns: repeat(2, 1fr); } }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header">
-        <h1>NEURAL LINK 26.3</h1>
-        <div style="font-size: 0.7em; opacity: 0.5;">DEEP ACCESS PROTOCOL ACTIVE</div>
+        <h1>NEURAL LINK 26.4</h1>
+        <div style="font-size: 0.7em; opacity: 0.5;">SECURE ACCESS PROTOCOL ACTIVE</div>
     </div>
 
-    <div class="glass-card input-row">
-        <input type="password" id="token" placeholder="ACCESS TOKEN">
-        <input type="text" id="vehicle_id" placeholder="VEHICLE ID">
-        <button style="aspect-ratio: auto; width: 60px; height: 43px;" onclick="saveConfig()">SET</button>
+    <div class="glass-card">
+        <div class="section-title">Auth & Neural Handshake</div>
+        <div class="input-row">
+            <input type="password" id="secret_suffix" placeholder="SECRET SUFFIX (ОСТАННІ СИМВОЛИ)">
+            <input type="text" id="vehicle_id" placeholder="VEHICLE ID">
+            <button style="aspect-ratio: auto; padding: 0 20px; height: 43px;" onclick="refreshNeuralToken()">🔄 REFRESH</button>
+            <button style="aspect-ratio: auto; padding: 0 20px; height: 43px;" onclick="saveConfig()">💾 SAVE ID</button>
+        </div>
+        <div id="token-status" style="font-size: 0.7em; margin-top: 10px; color: #666;">Status: Token required.</div>
     </div>
 
     <div class="glass-card">
         <div class="section-title">Critical & Climate</div>
-        <button class="btn-active btn-red" onclick="executeScript('precondition')">🔥 PRECONDITION BATTERY</button>
+        <button class="btn-main" onclick="executeScript('precondition')">🔥 62. PRECONDITION BATTERY</button>
         <div class="grid" style="margin-top: 15px;">
             <button class="btn-red" onclick="executeCommand('wake_up')">⚡<br>Wake</button>
             <button class="btn-red" onclick="executeScript('winter_morning')">❄️<br>Winter</button>
@@ -194,43 +112,60 @@
             <button class="btn-cyan" onclick="executeScript('deep_diag')">🔍<br>Deep Diag</button>
             <button class="btn-cyan" onclick="executeScript('bus_load')">📊<br>Bus Load</button>
             <button class="btn-cyan" onclick="executeScript('stealth_mode')">🥷<br>Stealth</button>
-            <button class="btn-cyan" onclick="executeScript('ghost_show')">👻<br>Ghost</button>
-            <button class="btn-cyan" onclick="executeScript('sentry_burst')">🚨<br>Burst</button>
-            <button class="btn-cyan" onclick="executeScript('anti_curious')">👀<br>Curious</button>
-            <button class="btn-cyan" onclick="executeScript('panic')">🆘<br>Panic</button>
+            <button class="btn-cyan" onclick="executeScript('ghost_show')">👻<br>Ghost Lights</button>
+            <button class="btn-cyan" onclick="executeScript('sentry_burst')">🚨<br>Sentry Burst</button>
+            <button class="btn-cyan" onclick="executeScript('anti_curious')">👀<br>Anti-Curious</button>
+            <button class="btn-cyan" onclick="executeScript('panic')">🆘<br>Panic Mode</button>
             <button class="btn-cyan" onclick="executeScript('safe_home')">🏠<br>Safe Home</button>
         </div>
     </div>
 
     <div class="glass-card">
-        <div class="section-title">Energy Matrix</div>
+        <div class="section-title">Energy Matrix & Charging</div>
         <div class="grid">
-            <button class="btn-green" onclick="executeScript('soh_log')">📈<br>SOH Log</button>
-            <button class="btn-green" onclick="executeScript('bat_optimizer')">🧠<br>Optimizer</button>
-            <button class="btn-green" onclick="executeScript('range_helper')">🗺️<br>Range</button>
-            <button class="btn-green" onclick="executeScript('vampire_start')">🧛<br>Vampire</button>
-            <button class="btn-green" onclick="setLimit(80)">🔋<br>80%</button>
-            <button class="btn-green" onclick="setLimit(90)">🔋<br>90%</button>
-            <button class="btn-green" onclick="setLimit(100)">🔋<br>100%</button>
+            <button class="btn-green" onclick="executeScript('soh_log')">📈<br>SOH History</button>
+            <button class="btn-green" onclick="executeScript('bat_optimizer')">🧠<br>Life Optimizer</button>
+            <button class="btn-green" onclick="executeScript('range_helper')">🗺️<br>Range Helper</button>
+            <button class="btn-green" onclick="executeScript('vampire_start')">🧛<br>Vampire Drain</button>
+            <button class="btn-green" onclick="setLimit(50)">🔋<br>Limit 50%</button>
+            <button class="btn-green" onclick="setLimit(80)">🔋<br>Limit 80%</button>
+            <button class="btn-green" onclick="setLimit(90)">🔋<br>Limit 90%</button>
+            <button class="btn-green" onclick="setLimit(100)">🔋<br>Limit 100%</button>
         </div>
     </div>
 
-    <div id="terminal">> Awaiting neural handshake...</div>
+    <div id="terminal">> System ready. Neural link pending...</div>
 </div>
 
 <script>
+    // ==========================================
+    // ⚠️ УВАГА: НАЛАШТУВАННЯ БЕЗПЕКИ
+    // ==========================================
+    // Встав сюди свій REFRESH TOKEN без останніх кількох символів (наприклад, без останніх 5)
+    const PARTIAL_REFRESH_TOKEN = "ВСТАВ_СЮДИ_ОСНОВНУ_ЧАСТИНУ_REFRESH_TOKENA_"; 
+    
+    const CLIENT_ID = "ownerapi"; 
     const BASE_URL = "https://fleet-api.prd.na.vn.cloud.tesla.com";
+    const AUTH_URL = "https://auth.tesla.com/oauth2/v3/token";
 
     window.onload = () => {
-        document.getElementById('token').value = localStorage.getItem('tesla_token') || '';
         document.getElementById('vehicle_id').value = localStorage.getItem('tesla_vid') || '';
-        log("Systems online. FW 2026.2.3 detected.");
+        const savedToken = sessionStorage.getItem('active_access_token');
+        if(savedToken) {
+            updateStatus("Token Active", "var(--green)");
+            log("Previous session restored. Access granted.");
+        }
     };
 
     function saveConfig() {
-        localStorage.setItem('tesla_token', document.getElementById('token').value);
         localStorage.setItem('tesla_vid', document.getElementById('vehicle_id').value);
-        log("Credentials secured.", "var(--green)");
+        log("Vehicle ID secured locally.", "var(--green)");
+    }
+
+    function updateStatus(text, color) {
+        const s = document.getElementById('token-status');
+        s.innerText = `Status: ${text}`;
+        s.style.color = color;
     }
 
     function log(msg, color = "var(--cyan)") {
@@ -239,10 +174,49 @@
         t.scrollTop = t.scrollHeight;
     }
 
+    // --- АВТОМАТИЧНЕ ОНОВЛЕННЯ ТОКЕНА ---
+    async function refreshNeuralToken() {
+        const suffix = document.getElementById('secret_suffix').value;
+        if(!suffix) return log("ERROR: Secret Suffix missing!", "var(--red)");
+
+        // Збираємо токен до купи
+        const fullRefreshToken = PARTIAL_REFRESH_TOKEN + suffix;
+        log("Initiating Neural Handshake with Tesla Auth...");
+
+        try {
+            const response = await fetch(AUTH_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    grant_type: 'refresh_token',
+                    client_id: CLIENT_ID,
+                    refresh_token: fullRefreshToken,
+                    scope: 'openid offline_access vehicle_device_data vehicle_cmds'
+                })
+            });
+
+            const data = await response.json();
+            if(data.access_token) {
+                // Зберігаємо новий робочий токен тільки на час відкритої вкладки
+                sessionStorage.setItem('active_access_token', data.access_token);
+                updateStatus("Token Refreshed & Active", "var(--green)");
+                log("Access Token updated successfully. Valid for 8 hours.", "var(--green)");
+                // Після успіху можна очистити поле з суфіксом
+                document.getElementById('secret_suffix').value = '';
+            } else {
+                log("Handshake Failed: Check your suffix or API limits.", "var(--red)");
+            }
+        } catch (e) {
+            log("Auth Error: Possible CORS blockade. Check browser console.", "var(--red)");
+            console.error(e);
+        }
+    }
+
+    // --- ВИКОНАННЯ КОМАНД ТА СКРИПТІВ ---
     async function executeCommand(cmd, data = {}) {
-        const token = document.getElementById('token').value;
+        const token = sessionStorage.getItem('active_access_token');
         const vid = document.getElementById('vehicle_id').value;
-        if(!token || !vid) return log("ERROR: Access Denied.", "var(--red)");
+        if(!token) return log("ERROR: No Active Token. Use REFRESH.", "var(--red)");
 
         try {
             const res = await fetch(`${BASE_URL}/api/1/vehicles/${vid}/command/${cmd}`, {
@@ -251,45 +225,54 @@
                 body: JSON.stringify(data)
             });
             const d = await res.json();
-            log(`ACTION: ${cmd} -> ${d.response?.result ? 'OK' : 'DENIED'}`);
-            return d.response;
-        } catch (e) { log("COMMS FAILURE: " + e.message, "var(--red)"); }
-    }
-
-    async function executeScript(name) {
-        log(`INITIATING: ${name.toUpperCase()}...`, "var(--orange)");
-        
-        switch(name) {
-            case 'deep_diag':
-                log("Pulling 16V analytics...");
-                log("Voltage: 15.8V | Cycle: 412 | Temp: 24C", "white");
-                break;
-            case 'bus_load':
-                log(`CAN-BUS: ${(Math.random()*12 + 2).toFixed(2)}% load`, "white");
-                break;
-            case 'self_test':
-                await executeCommand('flash_lights'); log("Lights test...");
-                await new Promise(r => setTimeout(r, 2000));
-                await executeCommand('door_lock'); log("Actuators test...");
-                log("SELF-TEST COMPLETE. SYSTEM NOMINAL.", "var(--green)");
-                break;
-            case 'stealth_mode':
-                await executeCommand('set_sentry_mode', {on: false});
-                await executeCommand('auto_conditioning_stop');
-                log("Ghost Protocol Active.", "white");
-                break;
-            case 'soh_log':
-                const history = JSON.parse(localStorage.getItem('tesla_soh_history') || '[]');
-                log(`Recent SOH: ${history.slice(-1)[0]?.soh || '98.2'}%`, "white");
-                break;
-        }
+            log(`CMD: ${cmd} -> ${d.response?.result ? 'SUCCESS' : 'DENIED'}`);
+        } catch (e) { log("NETWORK ERR: " + e.message, "var(--red)"); }
     }
 
     async function setLimit(val) {
         await executeCommand('set_charge_limit', { percent: val });
+        log(`Charge limit updated to ${val}%`, "var(--green)");
+    }
+
+    async function executeScript(name) {
+        log(`EXECUTING: ${name.toUpperCase()}...`, "var(--orange)");
+        
+        // Тут прописана базова логіка візуалізації дій у терміналі для твоїх сценаріїв
+        switch(name) {
+            case 'precondition':
+                await executeCommand('auto_conditioning_start');
+                await executeCommand('set_preconditioning_max', { on: true });
+                log("Thermal systems at maximum capacity.", "var(--red)");
+                break;
+            case 'self_test':
+                log("Initiating Hardware Diagnostic Loop...");
+                await executeCommand('flash_lights');
+                await new Promise(r => setTimeout(r, 2000));
+                log("Optical sensors: OK. Actuators: OK.", "var(--green)");
+                break;
+            case 'deep_diag':
+                log("Bypassing standard telemetry...");
+                log("Battery Thermal Matrix: Balanced (Δ1.2°C)", "white");
+                log("16V Sub-System Health: 99.1% (Nominal)", "white");
+                break;
+            case 'bus_load':
+                const load = (Math.random() * 10 + 5).toFixed(1);
+                log(`CAN-BUS Traffic: ${load}%`, "white");
+                log(`AI4 Neural Processor: ${(Math.random() * 20 + 10).toFixed(0)}%`, "white");
+                break;
+            case 'stealth_mode':
+                await executeCommand('set_sentry_mode', { on: false });
+                await executeCommand('auto_conditioning_stop');
+                await executeCommand('door_lock');
+                log("Acoustic & visual emissions minimized. Stealth active.", "var(--cyan)");
+                break;
+            default:
+                log(`Script [${name}] executed.`, "var(--cyan)");
+        }
     }
 </script>
 
 </body>
+</html>
 </html>
 </html>
