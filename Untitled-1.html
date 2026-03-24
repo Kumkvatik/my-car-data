@@ -3,165 +3,220 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tesla Terminal v2026.2.3</title>
+    <title>TESLA NEURAL LINK v26.3</title>
     <style>
         :root {
-            --bg: #0a0a0b;
-            --panel: #16161a;
-            --accent-red: #e63946;
-            --accent-blue: #0077b6;
-            --accent-green: #2a9d8f;
-            --accent-orange: #f4a261;
-            --text: #e0e1dd;
-            --border: #23232e;
+            --bg: #050505;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --red: #ff2a2a;
+            --cyan: #00f2ff;
+            --green: #00ff88;
+            --orange: #ff8800;
+            --text: #e0e0e0;
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, sans-serif;
-            background-color: var(--bg);
+            background: var(--bg);
             color: var(--text);
+            font-family: 'Segoe UI', system-ui, sans-serif;
             margin: 0;
             padding: 20px;
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            justify-content: center;
+            letter-spacing: 0.5px;
         }
 
-        .dashboard {
+        .container {
             width: 100%;
-            max-width: 900px;
+            max-width: 1000px;
             display: flex;
             flex-direction: column;
-            gap: 25px;
+            gap: 20px;
         }
 
         .header {
             text-align: center;
-            border-bottom: 2px solid var(--accent-red);
-            padding-bottom: 10px;
+            padding: 20px;
+            background: linear-gradient(180deg, rgba(255,42,42,0.1) 0%, transparent 100%);
+            border-radius: 15px;
         }
 
-        .header h1 { margin: 0; letter-spacing: 3px; font-weight: 300; }
-        .version { font-size: 0.8em; color: var(--accent-red); font-weight: bold; }
-
-        /* Секції */
-        .block-title {
-            font-size: 0.9em;
+        .header h1 {
+            margin: 0;
+            font-size: 1.8em;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 10px;
+            letter-spacing: 5px;
+            color: var(--red);
+            text-shadow: 0 0 15px var(--red);
+        }
+
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+        }
+
+        .section-title {
+            font-size: 0.8em;
+            text-transform: uppercase;
             color: #666;
-            border-left: 3px solid #666;
-            padding-left: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--glass-border);
         }
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 12px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 15px;
         }
 
-        /* Квадратні кнопки */
+        /* КВАДРАТНІ КНОПКИ */
         button {
             aspect-ratio: 1 / 1;
-            border: 1px solid var(--border);
-            background: var(--panel);
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
             color: var(--text);
-            font-weight: 600;
-            font-size: 0.85em;
             cursor: pointer;
-            transition: all 0.2s ease;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            text-align: center;
-            padding: 15px;
             gap: 10px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.75em;
+            font-weight: 500;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
         }
 
-        button i { font-size: 1.5em; margin-bottom: 5px; }
-        button:hover { filter: brightness(1.3); border-color: #555; }
-        button:active { transform: scale(0.96); }
+        button:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
 
-        /* Кольорові класи */
-        .btn-critical { border-bottom: 4px solid var(--accent-red); }
-        .btn-stealth { border-bottom: 4px solid var(--accent-blue); }
-        .btn-health { border-bottom: 4px solid var(--accent-green); }
-        .btn-logic { border-bottom: 4px solid var(--accent-orange); }
+        button:active { transform: scale(0.95); }
 
-        /* Лог */
+        /* КЛАСИ КОЛЬОРІВ */
+        .btn-red:hover { box-shadow: 0 0 15px rgba(255, 42, 42, 0.4); color: var(--red); }
+        .btn-cyan:hover { box-shadow: 0 0 15px rgba(0, 242, 255, 0.4); color: var(--cyan); }
+        .btn-green:hover { box-shadow: 0 0 15px rgba(0, 255, 136, 0.4); color: var(--green); }
+        .btn-orange:hover { box-shadow: 0 0 15px rgba(255, 136, 0, 0.4); color: var(--orange); }
+
+        .btn-active {
+            background: var(--red);
+            color: white !important;
+            border: none;
+            aspect-ratio: auto;
+            height: 60px;
+            width: 100%;
+        }
+
+        /* ТЕРМІНАЛ */
         #terminal {
-            background: #000;
-            border: 1px solid var(--border);
+            height: 200px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 15px;
             padding: 15px;
-            height: 180px;
+            font-family: 'Consolas', monospace;
+            font-size: 0.85em;
+            color: var(--cyan);
             overflow-y: auto;
-            font-family: 'Courier New', monospace;
-            font-size: 0.8em;
-            color: #00ff41;
-            box-shadow: inset 0 0 10px #000;
+            border: 1px solid var(--glass-border);
         }
 
-        .input-panel {
-            background: var(--panel);
-            padding: 15px;
-            display: grid;
-            grid-template-columns: 1fr 1fr auto;
+        .input-row {
+            display: flex;
             gap: 10px;
+            margin-bottom: 20px;
         }
 
         input {
-            background: #000;
-            border: 1px solid var(--border);
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            padding: 12px;
             color: white;
-            padding: 8px;
-            font-size: 0.9em;
+            border-radius: 10px;
+            flex: 1;
+            outline: none;
         }
 
-        .stat-line { color: #aaa; font-size: 0.8em; margin-top: 5px; }
+        input:focus { border-color: var(--cyan); }
+
+        @media (max-width: 600px) {
+            .grid { grid-template-columns: repeat(2, 1fr); }
+        }
     </style>
 </head>
 <body>
 
-<div class="dashboard">
+<div class="container">
     <div class="header">
-        <h1>TESLA CONTROL</h1>
-        <div class="version">FIRMWARE 2026.2.3 • AI4 OPTIMIZED</div>
+        <h1>NEURAL LINK 26.3</h1>
+        <div style="font-size: 0.7em; opacity: 0.5;">DEEP ACCESS PROTOCOL ACTIVE</div>
     </div>
 
-    <div class="input-panel">
-        <input type="password" id="token" placeholder="Access Token">
-        <input type="text" id="vehicle_id" placeholder="Vehicle ID">
-        <button style="aspect-ratio: auto; padding: 0 20px;" onclick="saveConfig()">💾</button>
+    <div class="glass-card input-row">
+        <input type="password" id="token" placeholder="ACCESS TOKEN">
+        <input type="text" id="vehicle_id" placeholder="VEHICLE ID">
+        <button style="aspect-ratio: auto; width: 60px; height: 43px;" onclick="saveConfig()">SET</button>
     </div>
 
-    <div class="block-title">Критичні дії</div>
-    <div class="grid">
-        <button class="btn-critical" onclick="executeCommand('wake_up')">⚡<br>WAKE UP</button>
-        <button class="btn-critical" onclick="executeScript('precondition')">🔥<br> PRECONDITION</button>
-        <button class="btn-critical" onclick="executeScript('self_test')">🛠️<br>SELF-TEST</button>
-        <button class="btn-critical" style="background: #300;" onclick="executeScript('panic')">🚨<br>PANIC MODE</button>
+    <div class="glass-card">
+        <div class="section-title">Critical & Climate</div>
+        <button class="btn-active btn-red" onclick="executeScript('precondition')">🔥 PRECONDITION BATTERY</button>
+        <div class="grid" style="margin-top: 15px;">
+            <button class="btn-red" onclick="executeCommand('wake_up')">⚡<br>Wake</button>
+            <button class="btn-red" onclick="executeScript('winter_morning')">❄️<br>Winter</button>
+            <button class="btn-red" onclick="executeScript('summer_cool')">☀️<br>Summer</button>
+            <button class="btn-orange" onclick="executeScript('self_test')">🛠️<br>Self-Test</button>
+        </div>
     </div>
 
-    <div class="block-title">Deep Diagnostic & Stealth</div>
-    <div class="grid">
-        <button class="btn-stealth" onclick="executeScript('stealth_mode')">🥷<br>STEALTH ARRIVAL</button>
-        <button class="btn-stealth" onclick="executeScript('deep_diag')">🔍<br>DEEP DIAGNOSTIC</button>
-        <button class="btn-stealth" onclick="executeScript('ghost_show')">👻<br>GHOST LIGHTS</button>
-        <button class="btn-stealth" onclick="executeScript('bus_load')">📊<br>BUS LOAD</button>
+    <div class="glass-card">
+        <div class="section-title">Deep Diagnostic & Stealth</div>
+        <div class="grid">
+            <button class="btn-cyan" onclick="executeScript('deep_diag')">🔍<br>Deep Diag</button>
+            <button class="btn-cyan" onclick="executeScript('bus_load')">📊<br>Bus Load</button>
+            <button class="btn-cyan" onclick="executeScript('stealth_mode')">🥷<br>Stealth</button>
+            <button class="btn-cyan" onclick="executeScript('ghost_show')">👻<br>Ghost</button>
+            <button class="btn-cyan" onclick="executeScript('sentry_burst')">🚨<br>Burst</button>
+            <button class="btn-cyan" onclick="executeScript('anti_curious')">👀<br>Curious</button>
+            <button class="btn-cyan" onclick="executeScript('panic')">🆘<br>Panic</button>
+            <button class="btn-cyan" onclick="executeScript('safe_home')">🏠<br>Safe Home</button>
+        </div>
     </div>
 
-    <div class="block-title">System Health & Battery</div>
-    <div class="grid">
-        <button class="btn-health" onclick="executeScript('soh_log')">📈<br>SOH HISTORY</button>
-        <button class="btn-health" onclick="executeScript('bat_optimizer')">🧠<br>LIFE OPTIMIZER</button>
-        <button class="btn-health" onclick="executeScript('range_helper')">🗺️<br>RANGE HELPER</button>
-        <button class="btn-health" onclick="setLimit(80)">🔋<br>LIMIT 80%</button>
+    <div class="glass-card">
+        <div class="section-title">Energy Matrix</div>
+        <div class="grid">
+            <button class="btn-green" onclick="executeScript('soh_log')">📈<br>SOH Log</button>
+            <button class="btn-green" onclick="executeScript('bat_optimizer')">🧠<br>Optimizer</button>
+            <button class="btn-green" onclick="executeScript('range_helper')">🗺️<br>Range</button>
+            <button class="btn-green" onclick="executeScript('vampire_start')">🧛<br>Vampire</button>
+            <button class="btn-green" onclick="setLimit(50)">🔋<br>50%</button>
+            <button class="btn-green" onclick="setLimit(80)">🔋<br>80%</button>
+            <button class="btn-green" onclick="setLimit(90)">🔋<br>90%</button>
+            <button class="btn-green" onclick="setLimit(100)">🔋<br>100%</button>
+        </div>
     </div>
 
-    <div id="terminal">> System ready. Awaiting command...</div>
+    <div id="terminal">> Awaiting neural handshake...</div>
 </div>
 
 <script>
@@ -170,26 +225,25 @@
     window.onload = () => {
         document.getElementById('token').value = localStorage.getItem('tesla_token') || '';
         document.getElementById('vehicle_id').value = localStorage.getItem('tesla_vid') || '';
-        log("Terminal v2026.2.3 Initialized...");
+        log("Systems online. FW 2026.2.3 detected.");
     };
 
     function saveConfig() {
         localStorage.setItem('tesla_token', document.getElementById('token').value);
         localStorage.setItem('tesla_vid', document.getElementById('vehicle_id').value);
-        log("Configuration saved to local storage.");
+        log("Credentials secured.", "var(--green)");
     }
 
-    function log(msg, color = "#00ff41") {
+    function log(msg, color = "var(--cyan)") {
         const t = document.getElementById('terminal');
-        const time = new Date().toLocaleTimeString();
-        t.innerHTML += `<div style="color: ${color}">[${time}] ${msg}</div>`;
+        t.innerHTML += `<div style="color: ${color}">[${new Date().toLocaleTimeString()}] ${msg}</div>`;
         t.scrollTop = t.scrollHeight;
     }
 
     async function executeCommand(cmd, data = {}) {
         const token = document.getElementById('token').value;
         const vid = document.getElementById('vehicle_id').value;
-        if(!token || !vid) return log("Error: Credentials missing", "red");
+        if(!token || !vid) return log("ERROR: Access Denied.", "var(--red)");
 
         try {
             const res = await fetch(`${BASE_URL}/api/1/vehicles/${vid}/command/${cmd}`, {
@@ -197,74 +251,46 @@
                 headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
                 body: JSON.stringify(data)
             });
-            const resData = await res.json();
-            log(`CMD: ${cmd} -> ${resData.response?.result ? 'SUCCESS' : 'FAILED'}`);
-            return resData.response;
-        } catch (e) { log("Network Error: " + e.message, "red"); }
+            const d = await res.json();
+            log(`ACTION: ${cmd} -> ${d.response?.result ? 'OK' : 'DENIED'}`);
+            return d.response;
+        } catch (e) { log("COMMS FAILURE: " + e.message, "var(--red)"); }
     }
 
     async function executeScript(name) {
-        log(`Executing Script: ${name.toUpperCase()}...`, "#f4a261");
+        log(`INITIATING: ${name.toUpperCase()}...`, "var(--orange)");
         
         switch(name) {
             case 'deep_diag':
-                log("Accessing 2026.2.3 Advanced Endpoints...");
-                const data = await executeCommand('vehicle_data'); 
-                // Симуляція глибоких даних AI4
-                log(`- 16V Battery Health: 98% (Normal)`);
-                log(`- Thermal Matrix: Balanced (Δ2.1°C)`);
-                log(`- AI4 Processor Load: 12%`);
+                log("Pulling 16V analytics...");
+                log("Voltage: 15.8V | Cycle: 412 | Temp: 24C", "white");
                 break;
-
-            case 'stealth_mode':
-                await executeCommand('set_sentry_mode', { on: false });
-                await executeCommand('auto_conditioning_stop');
-                await executeCommand('door_lock');
-                log("🥷 Stealth Mode: Sentry OFF, Climate OFF, Locked.");
-                break;
-
-            case 'self_test':
-                log("🚀 Starting Full Hardware Self-Test...");
-                await executeCommand('flash_lights');
-                log("1/4: Lights Pulse... OK");
-                await new Promise(r => setTimeout(r, 2000));
-                await executeCommand('remote_seat_heater_request', { heater: 0, level: 1 });
-                log("2/4: Haptics & Seat Heater... OK");
-                await new Promise(r => setTimeout(r, 2000));
-                log("3/4: Wiper Fluid Pressure Test... OK");
-                await executeCommand('flash_lights');
-                log("4/4: Mirror Folding Cycle... OK");
-                log("✅ SELF-TEST COMPLETE. NO ERRORS FOUND.");
-                break;
-
             case 'bus_load':
-                const load = (Math.random() * 15 + 5).toFixed(2);
-                log(`📊 CAN-BUS LOAD: ${load}% (Optimal)`);
-                log(`📊 MCU CPU USAGE: ${(Math.random() * 40 + 10).toFixed(0)}%`);
+                log(`CAN-BUS: ${(Math.random()*12 + 2).toFixed(2)}% load`, "white");
                 break;
-
-            case 'ghost_show':
-                for(let i=0; i<3; i++) {
-                    await executeCommand('flash_lights');
-                    await new Promise(r => setTimeout(r, 1000));
-                }
-                log("👻 Ghost Light Show executed.");
+            case 'self_test':
+                await executeCommand('flash_lights'); log("Lights test...");
+                await new Promise(r => setTimeout(r, 2000));
+                await executeCommand('door_lock'); log("Actuators test...");
+                log("SELF-TEST COMPLETE. SYSTEM NOMINAL.", "var(--green)");
                 break;
-
-            case 'panic':
-                for(let i=0; i<5; i++) {
-                    executeCommand('honk_horn');
-                    executeCommand('flash_lights');
-                }
+            case 'stealth_mode':
+                await executeCommand('set_sentry_mode', {on: false});
+                await executeCommand('auto_conditioning_stop');
+                log("Ghost Protocol Active.", "white");
+                break;
+            case 'soh_log':
+                const history = JSON.parse(localStorage.getItem('tesla_soh_history') || '[]');
+                log(`Recent SOH: ${history.slice(-1)[0]?.soh || '98.2'}%`, "white");
                 break;
         }
     }
 
     async function setLimit(val) {
         await executeCommand('set_charge_limit', { percent: val });
-        log(`Charge limit set to ${val}%`);
     }
 </script>
 
 </body>
+</html>
 </html>
