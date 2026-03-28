@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TESLA NEURAL LINK v26.4</title>
+    <title>TESLA NEURAL LINK v26.5</title>
     <style>
         :root {
             --bg: #050505;
@@ -28,11 +28,11 @@
 
         .header {
             text-align: center; padding: 20px;
-            background: linear-gradient(180deg, rgba(255,42,42,0.1) 0%, transparent 100%);
+            background: linear-gradient(180deg, rgba(0,242,255,0.1) 0%, transparent 100%);
             border-radius: 15px;
         }
 
-        .header h1 { margin: 0; font-size: 1.8em; text-transform: uppercase; letter-spacing: 5px; color: var(--red); text-shadow: 0 0 15px var(--red); }
+        .header h1 { margin: 0; font-size: 1.8em; text-transform: uppercase; letter-spacing: 5px; color: var(--cyan); text-shadow: 0 0 15px var(--cyan); }
 
         .glass-card {
             background: var(--glass); backdrop-filter: blur(10px);
@@ -60,13 +60,13 @@
         .btn-green:hover { box-shadow: 0 0 15px rgba(0, 255, 136, 0.4); color: var(--green); }
         .btn-orange:hover { box-shadow: 0 0 15px rgba(255, 136, 0, 0.4); color: var(--orange); }
 
-        .btn-main { background: var(--red); color: white; border: none; aspect-ratio: auto; height: 60px; width: 100%; font-size: 1em; letter-spacing: 2px; border-radius: 10px; cursor: pointer; }
+        .btn-main { background: var(--cyan); color: var(--bg); border: none; aspect-ratio: auto; height: 60px; width: 100%; font-size: 1em; font-weight: bold; letter-spacing: 2px; border-radius: 10px; cursor: pointer; }
 
         #terminal {
             height: 180px; background: rgba(0, 0, 0, 0.6);
             border-radius: 15px; padding: 15px;
             font-family: 'Consolas', monospace; font-size: 0.85em;
-            color: var(--cyan); overflow-y: auto; border: 1px solid var(--glass-border);
+            color: var(--green); overflow-y: auto; border: 1px solid var(--glass-border);
         }
 
         .input-row { display: flex; gap: 10px; flex-wrap: wrap; }
@@ -80,8 +80,8 @@
 
 <div class="container">
     <div class="header">
-        <h1>NEURAL LINK 26.4</h1>
-        <div style="font-size: 0.7em; opacity: 0.5;">SECURE ACCESS PROTOCOL ACTIVE</div>
+        <h1>NEURAL LINK 26.5</h1>
+        <div style="font-size: 0.7em; opacity: 0.7;">EU FLEET API + CORS BYPASS</div>
     </div>
 
     <div class="glass-card">
@@ -89,59 +89,62 @@
         <div class="input-row">
             <input type="password" id="secret_suffix" placeholder="SECRET SUFFIX (5 симв.)">
             <input type="text" id="vehicle_id" placeholder="VIN-код авто">
-            <button style="aspect-ratio: auto; padding: 0 20px; height: 43px;" onclick="refreshNeuralToken()">🔄 REFRESH</button>
+            <button style="aspect-ratio: auto; padding: 0 20px; height: 43px; color: var(--cyan); border-color: var(--cyan);" onclick="refreshNeuralToken()">🔄 CONNECT</button>
         </div>
-        <div id="token-status" style="font-size: 0.7em; margin-top: 10px; color: #666;">Status: Connection pending...</div>
+        <div id="token-status" style="font-size: 0.7em; margin-top: 10px; color: #666;">Status: Standing by...</div>
     </div>
 
     <div class="glass-card">
         <div class="section-title">Climate Control</div>
-        <button class="btn-main" onclick="executeScript('precondition')">🔥 PRECONDITIONING START</button>
+        <button class="btn-main" onclick="executeCommand('auto_conditioning_start')">🔥 PRECONDITIONING START</button>
         <div class="grid" style="margin-top: 15px;">
-            <button class="btn-red" onclick="executeCommand('wake_up')">⚡<br>Wake</button>
-            <button class="btn-red" onclick="executeCommand('auto_conditioning_stop')">❄️<br>Stop AC</button>
-            <button class="btn-red" onclick="executeScript('self_test')">🛠️<br>Self-Test</button>
-            <button class="btn-orange" onclick="executeCommand('flash_lights')">💡<br>Flash</button>
+            <button class="btn-orange" onclick="executeCommand('wake_up')">⚡<br>Wake Up</button>
+            <button class="btn-cyan" onclick="executeCommand('auto_conditioning_stop')">❄️<br>Stop AC</button>
+            <button class="btn-cyan" onclick="executeCommand('set_sentry_mode', {on: true})">🛡️<br>Sentry ON</button>
+            <button class="btn-cyan" onclick="executeCommand('flash_lights')">💡<br>Flash</button>
         </div>
     </div>
 
     <div class="glass-card">
-        <div class="section-title">Diagnostic Tools</div>
+        <div class="section-title">Doors & Security</div>
         <div class="grid">
-            <button class="btn-cyan" onclick="executeScript('deep_diag')">🔍<br>Deep Diag</button>
-            <button class="btn-cyan" onclick="executeScript('bus_load')">📊<br>Bus Load</button>
-            <button class="btn-cyan" onclick="executeCommand('honk_horn')">🎺<br>Honk</button>
-            <button class="btn-cyan" onclick="executeCommand('door_lock')">🔒<br>Lock</button>
-            <button class="btn-cyan" onclick="executeCommand('door_unlock')">🔓<br>Unlock</button>
-            <button class="btn-cyan" onclick="executeScript('safe_home')">🏠<br>Safe Home</button>
+            <button class="btn-red" onclick="executeCommand('door_lock')">🔒<br>Lock</button>
+            <button class="btn-green" onclick="executeCommand('door_unlock')">🔓<br>Unlock</button>
+            <button class="btn-orange" onclick="executeCommand('honk_horn')">🎺<br>Honk</button>
+            <button class="btn-cyan" onclick="executeCommand('actuate_trunk', {which_trunk: 'rear'})">🚗<br>Trunk</button>
+            <button class="btn-cyan" onclick="executeCommand('actuate_trunk', {which_trunk: 'front'})">🧳<br>Frunk</button>
+            <button class="btn-red" onclick="sessionStorage.clear(); log('Session wiped.', 'var(--red)'); updateStatus('Disconnected', 'var(--red)');">🛑<br>Logout</button>
         </div>
     </div>
 
-    <div id="terminal">> Waiting for auth handshake...</div>
+    <div id="terminal">> System Boot...<br>> Awaiting connection. Don't forget to activate CORS demo!</div>
 </div>
 
 <script>
     // ==========================================
-    // 🛡️ КОНФІГУРАЦІЯ (ЗАШИТІ ДАНІ)
+    // 🛡️ КОНФІГУРАЦІЯ СИСТЕМИ
     // ==========================================
-    const MY_VIN = "5YJYGDED7MF109418"; // <--- ВСТАВ СЮДИ СВІЙ VIN
     
+    // 1. ВСТАВ СВІЙ VIN ТУТ (17 символів)
+    const MY_VIN = "5YJYGDED7MF109418"; 
+
+    // 2. ПРОКСІ ТА СЕРВЕРИ
+    const PROXY = "https://cors-anywhere.herokuapp.com/"; 
+    const BASE_URL = "https://fleet-api.prd.eu.vn.cloud.tesla.com"; // ЄВРОПЕЙСЬКИЙ СЕРВЕР
+    const AUTH_URL = "https://auth.tesla.com/oauth2/v3/token";
+
+    // 3. ТОКЕН (БЕЗ СУФІКСУ)
     const PARTIAL_TOKEN = "eyJhbGciOiJSUzI1NiIsImtpZCI6InJQMWd2TjJicTFnZFhHWFhhaTM4U0ItdGt2OCIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJodHRwczovL2F1dGgudGVzbGEuY29tL29hdXRoMi92My90b2tlbiIsImRhdGEiOnsiYW1yIjpbInB3ZCIsIm1mYSIsIm90cCJdLCJhdWQiOiJodHRwczovL293bmVyLWFwaS50ZXNsYW1vdG9ycy5jb20vIiwiYXV0aF90aW1lIjoxNzc0MzY1OTcwLCJhenAiOiJvd25lcmFwaSIsInNjcCI6WyJvcGVuaWQiLCJlbWFpbCIsIm9mZmxpbmVfYWNjZXNzIl0sInN1YiI6IjRjMTBiMTY5LTRjY2MtNGVjNC1iNDRjLTIwNzY4MzAwY2QxYyIsInVzZXJfc2Vzc2lvbl9pZCI6ImRmNzQyZDQ2LTBjNTQtNGEwNC04Zjc3LTRkZmI5OGJmODQwYSIsInYiOiIxIn0sImlhdCI6MTc3NDM2NTk4NywiaXNzIjoiaHR0cHM6Ly9hdXRoLnRlc2xhLmNvbS9vYXV0aDIvdjMiLCJvdV9jb2RlIjoiRVUiLCJzY3AiOlsib3BlbmlkIiwib2ZmbGluZV9hY2Nlc3MiXSwic3ViIjoiNGMxMGIxNjktNGNjYy00ZWM0LWI0NGMtMjA3NjgzMDBjZDFjIn0.i6Y43dIKQOUhmSqjfcTRr7kLjSg0aoZ6vPfvQaizxf_OgSdPPlZXzP4ezFwvATSy9s6nJnMFaimREn25W8prTfIgXqtpYyDFAVr4_oMw3_q_yUm78R5L8SMMwIL_aIdZUEVsCfiN_H9mwjzsAYW9PYqSCUxpBfiPv4FqoUhb9tEq1wkYOEGmQkgxqeax6-A962i4D4UNpgAFpO_LFXEmMFWkZ9Vuwin2XOb1ym88jl1sRgp1N3MAD3SIqgVLc3Onuq8oTjJCNmkMSauG5NTXcrf-reBFGEnAsbdHrKtenVMLDx33Zfh_ttQZyrxzeeTnmsQmUkk7zUjiamBWJ";
 
-    const AUTH_URL = "https://auth.tesla.com/oauth2/v3/token";
-    const BASE_URL = "https://fleet-api.prd.na.vn.cloud.tesla.com"; 
-
     window.onload = () => {
-        // Автоматично підставляємо VIN при завантаженні
         document.getElementById('vehicle_id').value = MY_VIN;
-        
         if(sessionStorage.getItem('active_access_token')) {
             updateStatus("Link Active", "var(--green)");
-            log("Session active. Neural bridge open.");
+            log("Session restored from memory.", "var(--cyan)");
         }
     };
 
-    function log(msg, color = "var(--cyan)") {
+    function log(msg, color = "var(--green)") {
         const t = document.getElementById('terminal');
         t.innerHTML += `<div style="color: ${color}">[${new Date().toLocaleTimeString()}] ${msg}</div>`;
         t.scrollTop = t.scrollHeight;
@@ -153,11 +156,12 @@
         s.style.color = color;
     }
 
+    // 🔄 ОТРИМАННЯ ACCESS ТОКЕНА (АВТОРИЗАЦІЯ)
     async function refreshNeuralToken() {
         const suffix = document.getElementById('secret_suffix').value;
-        if(!suffix) return log("ERROR: Enter secret suffix!", "var(--red)");
+        if(!suffix) return log("ERROR: Enter secret suffix (tosyQ)!", "var(--red)");
 
-        log("Requesting uplink to Tesla Auth...");
+        log("Connecting to Tesla Auth Servers...", "var(--orange)");
         try {
             const res = await fetch(AUTH_URL, {
                 method: 'POST',
@@ -170,50 +174,74 @@
                 })
             });
             const data = await res.json();
+            
             if(data.access_token) {
                 sessionStorage.setItem('active_access_token', data.access_token);
-                updateStatus("Authenticated", "var(--green)");
-                log("Uplink successful. Systems online.", "var(--green)");
+                updateStatus("Connected", "var(--green)");
+                log("Auth SUCCESS. Token active for 8 hours.", "var(--green)");
                 document.getElementById('secret_suffix').value = '';
             } else {
-                log("Access Denied: Check suffix.", "var(--red)");
+                log(`Auth FAILED: ${data.error_description || "Wrong suffix"}`, "var(--red)");
             }
         } catch (e) {
-            log("CORS/Network error. Use a proxy if blocked.", "var(--red)");
+            log("Auth Error. Ensure internet connection.", "var(--red)");
         }
     }
 
+    // ⚡ ВІДПРАВКА КОМАНД ЧЕРЕЗ CORS ПРОКСІ
     async function executeCommand(cmd, params = {}) {
         const token = sessionStorage.getItem('active_access_token');
         const vin = document.getElementById('vehicle_id').value;
         
-        if(!token) return log("AUTH REQUIRED", "var(--red)");
-        if(!vin || vin === "ВСТАВ_СВІЙ_VIN_ТУТ") return log("VIN REQUIRED", "var(--red)");
+        if(!token) return log("AUTH REQUIRED! Click CONNECT first.", "var(--red)");
+        if(!vin || vin === "ВСТАВ_СВІЙ_VIN_ТУТ") return log("VIN REQUIRED!", "var(--red)");
 
+        log(`Sending [${cmd}] to Vehicle...`, "var(--cyan)");
+        
         try {
-            const res = await fetch(`${BASE_URL}/api/1/vehicles/${vin}/command/${cmd}`, {
+            // Збираємо повний URL з проксі та європейським сервером
+            const fullUrl = `${PROXY}${BASE_URL}/api/1/vehicles/${vin}/command/${cmd}`;
+            
+            const res = await fetch(fullUrl, {
                 method: 'POST',
                 headers: { 
                     "Authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "X-Requested-With": "XMLHttpRequest" // Обов'язково для CORS проксі
                 },
                 body: JSON.stringify(params)
             });
-            const d = await res.json();
-            log(`CMD: ${cmd} -> ${d.response?.result ? 'OK' : 'FAIL'}`);
-        } catch (e) { log("EXECUTION ERROR: " + e.message, "var(--red)"); }
-    }
+            
+            // Якщо проксі не активовано, він поверне помилку, а не JSON
+            if(!res.ok && res.status === 403) {
+                return log("CORS BLOCKED! Open cors-anywhere.herokuapp.com/corsdemo to activate.", "var(--red)");
+            }
 
-    async function executeScript(name) {
-        log(`INIT: ${name.toUpperCase()}...`, "var(--orange)");
-        if(name === 'precondition') {
-            await executeCommand('auto_conditioning_start');
-        } else if(name === 'deep_diag') {
-            log("AI4 Diagnostic: 16V Battery 15.8V | Temp 24°C", "white");
-        } else if(name === 'self_test') {
-            await executeCommand('flash_lights');
-            log("Hardware self-test complete.");
+            const data = await res.json();
+            
+            // Перевірка, чи спить машина
+            if (data.error === "vehicle_unavailable") {
+                log("CAR IS ASLEEP! Sending Wake Up command...", "var(--orange)");
+                // Рекурсивно викликаємо Wake Up
+                executeCommand('wake_up');
+            } 
+            // Успішне виконання
+            else if (data.response && data.response.result) {
+                log(`COMMAND [${cmd}] -> SUCCESS!`, "var(--green)");
+            } 
+            // Інші помилки API
+            else {
+                log(`FAILED: ${data.error || JSON.stringify(data.response)}`, "var(--red)");
+            }
+
+        } catch (e) { 
+            log("NETWORK ERROR! Did you activate the CORS demo?", "var(--red)"); 
+            console.error(e);
         }
+    }
+</script>
+</body>
+</html>
     }
 </script>
 </body>
